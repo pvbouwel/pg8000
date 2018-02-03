@@ -42,7 +42,8 @@ __author__ = "Mathieu Fenniak"
 
 def connect(
         user, host='localhost', unix_sock=None, port=5432, database=None,
-        password=None, ssl=False, timeout=None, application_name=None):
+        password=None, ssl=False, timeout=None, application_name=None,
+        tcp_keep_alive=False):
     """Creates a connection to a PostgreSQL database.
 
     This function is part of the `DBAPI 2.0 specification
@@ -103,12 +104,21 @@ def connect(
         connection to the database will time out. The default is ``None`` which
         means no timeout.
 
+    :keyword tcp_keep_alive:
+        This is to enable TCP keepalives for the connection to the database.
+        These help maintain a connection when long running queries are issued or
+        when no statements are issued for an extended period of time. By default
+        these keepalives are not enabled when you set to ``True`` then the
+        connection will send keep-alives.  How often these keepalives are sent
+        and how many can be missed before a connection is deemed broken is an
+        OS setting.
+
     :rtype:
         A :class:`Connection` object.
     """
     return Connection(
         user, host, unix_sock, port, database, password, ssl, timeout,
-        application_name)
+        application_name, tcp_keep_alive)
 
 
 apilevel = "2.0"
